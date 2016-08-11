@@ -8,7 +8,7 @@ set :database, "sqlite3:barbershop.db"
 
 class Client < ActiveRecord::Base
   validates :name, presence: true
-  validates :phone, presence: true
+  validates :phone, presence: true, length: {minimum: 7}
   validates :datestamp, presence: true
   validates :color, presence: true
 
@@ -36,15 +36,16 @@ end
 
 post '/visit' do
 
-  @c = Client.new params[:client]
-  if @c.save 
-    erb "Спасибо, вы записались!"
-  else
-    @error = @c.errors.full_messages.first
-    erb :visit
+      @c = Client.new params[:client]
+      if @c.save 
+        erb "Спасибо, вы записались!"
+      else
+        @error = @c.errors.full_messages.first
+        erb :visit
+      end
   end
 
-
-  
-  end
-
+get '/barber/:id' do
+  @barber = Barber.find(params[:id])
+ erb :barber
+end
